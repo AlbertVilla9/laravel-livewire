@@ -3,47 +3,47 @@ services:
   app:
     build:
       args:
-        user: sammy
+        user: ${APP_NAME}-user
         uid: 1000
       context: ./
       dockerfile: Dockerfile
-    image: proj-live
-    container_name: proj-live-app
+    image: ${APP_NAME}-img
+    container_name: ${APP_NAME}-app
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
-      - ./:/var/www
+      - ./:/var/www:delegated
+      - ./logs:/var/logs:delegated
     networks:
-      - proj-live
+      - pim-network
 
   db:
-    image: mysql:5.7
-    container_name: proj-live-db
+    image: mongo:4.4.6
+    container_name: ${APP_NAME}-db
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+        MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+        MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+        MONGO_INITDB_DATABASE: ${DB_DATABASE}
+    ports:
+      - 27017:27017
     volumes:
-      - ./docker-compose/mysql:/docker-entrypoint-initdb.d
-    networks:
-      - proj-live
+        - ./data:/data/db:delegated
+    networks: 
+        - pim-network
 
   nginx:
     image: nginx:alpine
-    container_name: proj-live-nginx
+    container_name: ${APP_NAME}-nginx
     restart: unless-stopped
     ports:
       - 8000:80
     volumes:
-      - ./:/var/www
-      - ./docker-compose/nginx:/etc/nginx/conf.d/
+      - ./:/var/www:cached
+      - ./docker-compose/nginx:/etc/nginx/conf.d/:cached
     networks:
-      - proj-live
+      - pim-network
 
 networks:
-  proj-live:
+  pim-network:
     driver: bridge
