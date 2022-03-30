@@ -20,8 +20,7 @@
                             <div>
                                 <x-label for="name" :value="__('URL Video')" />
                                 <x-input id="urlvideo" class="block mt-1 w-full" type="text" name="urlvideo" value="url" autofocus />
-                                {{ $userid =  auth()->user()->id  }}
-                                <x-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" value='{{ $userid }}'/>
+                                <x-input id="userid" class="block mt-1 w-full" type="hidden" name="userid" value='{{  $userid =  auth()->user()->id  }}'/>
                             </div>
                                 
                             </div>

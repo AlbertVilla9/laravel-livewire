@@ -47,10 +47,14 @@ RUN locale-gen
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+
 # Install Node.js
 RUN apt-get update
 RUN apt-get install nodejs npm -y
 RUN npm install
+
+# Install QRcode
+RUN npm install -g qrcode
 
 #INSTALL COMPOSER - CONFIG APP
 #RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

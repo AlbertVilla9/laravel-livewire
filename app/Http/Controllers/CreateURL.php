@@ -20,6 +20,7 @@ class CreateURL extends Controller
         ]);
         
         $hash = random_strings(10);
+        $url = $request->urlvideo;
         
         $user = Url::create([
             'userid' => $request->userid,
@@ -27,7 +28,8 @@ class CreateURL extends Controller
             'urlvideo' => $request->urlvideo,
         ]);
 
-        exec("./qr.sh $hash");
+        exec("qrcode -o /var/www/public/hola.png ${APP_URL} . /vr/ . $hash");
+        exec("node app.js -i <path-to-the-img/image-name.jpg/png>")
 
         return redirect(RouteServiceProvider::HERE);
     }
