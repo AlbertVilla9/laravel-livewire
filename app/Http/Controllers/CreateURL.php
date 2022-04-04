@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Validation\Rules;
 use App\Providers\RouteServiceProvider;
 use Faker\Generator as Faker;
+use DB;
 
 class CreateURL extends Controller
 {
@@ -21,16 +22,22 @@ class CreateURL extends Controller
         
         
         $url = $request->urlvideo;
+        $hash = $request->hash;
         
         $user = Url::create([
             'userid' => $request->userid,
             'hash' => $request->hash,
             'urlvideo' => $request->urlvideo,
         ]);
+       
 
-        exec("qrcode -o /var/www/public/".$request->hash.".png ".env('APP_URL', false) . "/vr/" . $request->hash);
-        //exec("node app.js -i <path-to-the-img/image-name.jpg/png>");
-
-        return redirect(RouteServiceProvider::HERE);
+        exec("qrcode -E 'h' -s 50 -o /var/www/public/imagesQr/".$request->hash.".png ".env('APP_URL', false) . "/ar/" .$request->hash);
+        
+        $command = "node ./js/NFT/app.js -i ../../imagesQr/".$request->hash.".png";
+        $res = exec($command);
+        
+        $url = DB::table('urls')->get()->where('hash', $request->hash)->first();
+        return view('video', ['urlvideo' => $url]);
+        view('ar', ['urlvideo' => $url]);
     }
 }

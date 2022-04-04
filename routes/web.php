@@ -32,6 +32,22 @@ Route::group(['middleware' => 'auth'], function() {
     Route::put('create_url', [\App\Http\Controllers\CreateURL::class, 'store'])
         ->name('create_url.store');
 
+    Route::get('video/{id}', function ($id) {
+
+        $url = DB::table('urls')->get()->where('hash', $id)->first();
+    
+        return view('video', ['urlvideo' => $url]);
+    });
+
+   
+
+});
+
+Route::get('ar/{id}', function ($id) {
+
+    $url = DB::table('urls')->get()->where('hash', $id)->first();
+
+    return view('ar', ['urlvideo' => $url]);
 });
 
 // USER DASHBOARD

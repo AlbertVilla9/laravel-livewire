@@ -53,6 +53,15 @@ RUN apt-get update
 RUN apt-get install nodejs npm -y
 RUN npm install
 
+# Install ARJS marker creator components
+RUN npm install --save path
+RUN npm install --save fs
+RUN npm install --save glob
+RUN npm install --save readline-sync
+RUN npm install --save inkjet
+RUN npm install --save imagemagick
+RUN npm install --save pngjs
+
 # Install QRcode
 RUN npm install -g qrcode
 
