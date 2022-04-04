@@ -15,6 +15,8 @@
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="https://unpkg.com/html5-qrcode"></script>
+      
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100">
@@ -32,5 +34,29 @@
                 {{ $slot }}
             </main>
         </div>
+        <script>
+        var resultContainer = document.getElementById('hash');
+        var lastResult, countResults = 0;
+        var hash ='';
+
+        function onScanSuccess(decodedText, decodedResult) {
+            if (decodedText !== lastResult) {
+                ++countResults;
+                lastResult = decodedText;
+                // Handle on success condition with the decoded message.
+                console.log(`Scan result ${decodedText}`, decodedResult);
+            }
+            
+            hash = decodedText.substring(decodedText.lastIndexOf('/')+1, decodedText.length );
+
+            resultContainer.value=`${hash}`;
+
+        }
+
+
+        var html5QrcodeScanner = new Html5QrcodeScanner(
+            "qr-reader", { fps: 10, qrbox: 250 });
+        html5QrcodeScanner.render(onScanSuccess);
+    </script>
     </body>
 </html>
